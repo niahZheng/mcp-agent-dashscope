@@ -123,39 +123,19 @@ mcp-agent/
 
 ## 使用示例
 
-### 作为 MCP 服务器运行
+### Web 界面使用（主要方式）
+
+启动 Web 服务器后，在浏览器中访问 `http://localhost:3000`，即可使用 AI 对话功能。
+
+### 其他使用方式
+
+**直接运行 MCP 服务器（用于集成到其他 MCP 客户端）：**
 
 ```bash
 npm start
 ```
 
-**注意：** 直接运行 `npm start` 会启动 MCP 服务器，它通过 stdio 与 MCP 客户端通信。如果要通过 Web 界面使用，请使用 `npm run api` 启动 Web 服务器。
-
-### 集成到 Claude Desktop
-
-
-**快速配置：**
-
-1. 找到配置文件：
-   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-2. 添加配置：
-```json
-{
-  "mcpServers": {
-    "dashscope-agent": {
-      "command": "node",
-      "args": ["D:\\project\\MCP\\mcp-agent\\dist\\index.js"],
-      "env": {
-        "DASHSCOPE_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
-
-3. 重启 Claude Desktop
+**注意：** 直接运行 `npm start` 会启动纯 MCP 服务器，通过 stdio 与 MCP 客户端通信。如果要通过 Web 界面使用，请使用 `npm run api` 启动 Web 服务器。
 
 ## 开发
 

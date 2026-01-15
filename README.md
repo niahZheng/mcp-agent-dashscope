@@ -148,7 +148,7 @@ npm start
       "command": "node",
       "args": ["D:\\project\\MCP\\mcp-agent\\dist\\index.js"],
       "env": {
-        "DASHSCOPE_API_KEY": "sk-51a208c1a4364820bd2faea140468764"
+        "DASHSCOPE_API_KEY": "your-api-key-here"
       }
     }
   }

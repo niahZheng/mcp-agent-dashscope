@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Agent Web 客户端</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tools-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .tool-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .tool-name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .tool-description {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .result-content {
+            color: #666;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .error {
+            background: #fff5f5;
+            border-left-color: #e53e3e;
+        }
+        
+        .error .result-title {
+            color: #e53e3e;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .status.connected {
+            background: #f0fff4;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .status.disconnected {
+            background: #fff5f5;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 MCP Agent Web 客户端</h1>
+            <p>基于阿里百炼 DashScope 的 MCP Agent 测试界面</p>
+        </div>
+        
+        <div class="content">
+            <div id="status" class="status disconnected">
+                ⚠️ 请先启动 MCP 服务器（运行 npm run api）
+            </div>
+            
+            <div class="tools-section">
+                <div class="section-title">🤖 AI 对话工具（阿里百炼大模型）</div>
+                <div class="tool-card">
+                    <div class="tool-name">ai_chat</div>
+                    <div class="tool-description">使用阿里百炼 DashScope 大模型进行对话（支持多轮对话）</div>
+                    
+                    <div class="input-group">
+                        <label>消息内容</label>
+                        <textarea id="ai-message" rows="3" placeholder="输入你想问的问题..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit;">你好，请介绍一下你自己</textarea>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                        <div class="input-group">
+                            <label>模型选择</label>
+                            <select id="ai-model">
+                                <option value="qwen-turbo">qwen-turbo (快速)</option>
+                                <option value="qwen-plus">qwen-plus (增强)</option>
+                                <option value="qwen-max">qwen-max (最强)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>温度参数 (0-1)</label>
+                            <input type="number" id="ai-temperature" value="0.7" min="0" max="1" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>系统提示词（可选）</label>
+                        <input type="text" id="ai-system-prompt" placeholder="例如：你是一个专业的AI助手">
+                    </div>
+                    
+                    <button class="btn" onclick="callAIChat()">发送消息</button>
+                    <div id="ai-result" class="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function callAIChat() {
+            const message = document.getElementById('ai-message').value;
+            const model = document.getElementById('ai-model').value;
+            const temperature = parseFloat(document.getElementById('ai-temperature').value);
+            const systemPrompt = document.getElementById('ai-system-prompt').value;
+            const resultDiv = document.getElementById('ai-result');
+            
+            if (!message.trim()) {
+                showResult(resultDiv, '请输入消息内容', true);
+                return;
+            }
+            
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '<div class="result-title">AI 思考中...</div>';
+            resultDiv.classList.add('show');
+            
+            try {
+                const arguments = {
+                    message: message,
+                    model: model,
+                    temperature: temperature
+                };
+                
+                if (systemPrompt.trim()) {
+                    arguments.system_prompt = systemPrompt;
+                }
+                
+                const response = await fetch('/api/mcp/tools/call', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: 'ai_chat',
+                        arguments: arguments
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    showResult(resultDiv, `错误: ${data.error}`, true);
+                } else {
+                    showResult(resultDiv, data.content[0].text, false);
+                }
+            } catch (error) {
+                showResult(resultDiv, `错误: ${error.message}\n\n提示: 需要启动后端服务器（npm run api）才能使用此功能。`, true);
+            }
+        }
+        
+        function showResult(div, content, isError) {
+            div.className = `result ${isError ? 'error' : ''}`;
+            div.innerHTML = `
+                <div class="result-title">${isError ? '❌ 错误' : '✅ 结果'}</div>
+                <div class="result-content">${content}</div>
+            `;
+            div.classList.add('show');
+        }
+        
+        // 检查服务器状态
+        async function checkStatus() {
+            try {
+                const response = await fetch('/api/mcp/status');
+                const statusDiv = document.getElementById('status');
+                if (response.ok) {
+                    statusDiv.className = 'status connected';
+                    statusDiv.textContent = '✅ MCP 服务器已连接';
+                } else {
+                    throw new Error('Server not available');
+                }
+            } catch (error) {
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status disconnected';
+                statusDiv.textContent = '⚠️ MCP 服务器未连接（需要启动后端服务器）';
+            }
+        }
+        
+        // 页面加载时检查状态
+        checkStatus();
+        setInterval(checkStatus, 5000);
+    </script>
+</body>
+</html>
+

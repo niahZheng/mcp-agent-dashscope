@@ -1,0 +1,40 @@
+{
+  "name": "mcp-agent-dashscope",
+  "version": "1.0.0",
+  "description": "基于阿里百炼 DashScope 的 MCP Agent 样例工程",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "watch": "tsc --watch",
+    "test": "node test-mcp-client.js",
+    "api": "tsx src/api-server.ts",
+    "api:dev": "tsx watch src/api-server.ts"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "dashscope",
+    "agent",
+    "ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "dotenv": "^16.3.1",
+    "zod": "^3.22.4",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
+

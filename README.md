@@ -147,32 +147,6 @@ npm start
 
 在 `src/resources/` 目录下创建新的资源文件，然后在 `src/server.ts` 中注册。
 
-## GitHub 上传
-
-项目已准备好上传到 GitHub。已完成：
-- ✅ Git 仓库初始化
-- ✅ 文件已提交（已移除 README 中的真实 API Key）
-
-### 上传步骤
-
-1. **在 GitHub 上创建新仓库**
-   - 访问 https://github.com/new
-   - 填写仓库名称（如：`mcp-agent-dashscope`）
-   - 选择 Public 或 Private
-   - **不要**勾选 "Initialize with README"（我们已经有了）
-
-2. **添加远程仓库并推送**
-   ```bash
-   # 添加远程仓库（替换 YOUR_USERNAME 和 REPO_NAME）
-   git remote add origin https://github.com/YOUR_USERNAME/REPO_NAME.git
-   
-   # 推送代码
-   git branch -M main
-   git push -u origin main
-   ```
-
-**安全提示：** `.env` 文件已在 `.gitignore` 中，不会被上传。请确保不要在代码中硬编码 API Key。
-
 ## 许可证
 
 MIT
